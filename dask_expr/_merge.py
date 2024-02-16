@@ -139,7 +139,10 @@ class Merge(Expr):
     def _npartitions(self):
         if self.operand("_npartitions") is not None:
             return self.operand("_npartitions")
-        return max(self.left.npartitions, self.right.npartitions)
+        # Avoid shuffling on broadcast join
+        if self.is_broadcast_join:
+            return max(self.left.npartitions, self.right.npartitions)
+        return self.left.npartitions + self.right.npartitions
 
     @property
     def _bcast_left(self):
