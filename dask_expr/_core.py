@@ -714,7 +714,7 @@ class Expr:
         return (expr for expr in self.walk() if isinstance(expr, operation))
 
 
-def collect_dependents(expr) -> defaultdict:
+def collect_dependents(expr: Expr) -> defaultdict[str, list[weakref.ref[Expr]]]:
     dependents = defaultdict(list)
     stack = [expr]
     seen = set()
